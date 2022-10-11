@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.revolve44.bleservertest1'
+    namespace 'com.arstagaev.bleservertest1'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.revolve44.bleservertest1"
+        applicationId "com.arstagaev.bleservertest1"
         minSdk 23
         targetSdk 32
         versionCode 1

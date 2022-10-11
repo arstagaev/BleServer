@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.ParcelUuid
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,13 +47,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        if (!hasPermission(Manifest.permission.BLUETOOTH_ADVERTISE)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                requestPermission(Manifest.permission.BLUETOOTH_ADVERTISE,4)
-            }
-
-        }
+        isAllPermissionsEnabled()
+//        if (!hasPermission(Manifest.permission.BLUETOOTH_ADVERTISE)) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                requestPermission(Manifest.permission.BLUETOOTH_ADVERTISE,4)
+//            }
+//
+//        }
         setContent {
             BleServerTest1Theme {
                 // A surface container using the 'background' color from the theme
@@ -69,6 +70,8 @@ class MainActivity : ComponentActivity() {
                             mBluetoothAdapter = mBluetoothManger.adapter
                             mBluetoothAdapter.setName("SpaceX")
                             checker()
+                        }else {
+                            Toast.makeText(applicationContext,"Need press to button every 5 sec, until you dont accept all permissions",Toast.LENGTH_SHORT).show()
                         }
 
                     }) {
@@ -143,7 +146,7 @@ class MainActivity : ComponentActivity() {
         )
         service.addCharacteristic(writeCharacteristic)
         mGattServer.addService(service)
-
+        Toast.makeText(applicationContext,"Setup Server!",Toast.LENGTH_SHORT).show()
     }
 
     inner class GattServerCallback: BluetoothGattServerCallback() {
@@ -205,10 +208,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
         stopAdvertising()
         stopServer()
+        super.onDestroy()
     }
 
     private fun stopAdvertising() {
@@ -237,6 +240,7 @@ class MainActivity : ComponentActivity() {
             if (!hasPermission(Manifest.permission.BLUETOOTH_ADVERTISE)) {
                 requestPermission(Manifest.permission.BLUETOOTH_ADVERTISE,4)
                 return false
+
             }
         }
 
